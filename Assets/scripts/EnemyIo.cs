@@ -8,9 +8,11 @@ public class EnemyIo : MonoBehaviour
     public List<Transform> patrolPoints;
     public PlayerController player;
     public float viewAngle;
+    public float Damage = 30;
 
     private NavMeshAgent _navMeshAgent;
     private bool _isPlayerNoticed;
+    private PlayerHealth _PlayerHealth;
 
     // Start is called before the first frame update
     private void Start()
@@ -28,13 +30,14 @@ public class EnemyIo : MonoBehaviour
     private void InitComponetLinks()
     {
         _navMeshAgent = GetComponent<NavMeshAgent>();
+        _PlayerHealth = player.GetComponent<PlayerHealth>();
     }
 
     private void PatrolUpdate()
     {
         if(!_isPlayerNoticed)
         {
-            if (_navMeshAgent.remainingDistance == 0)
+            if (_navMeshAgent.remainingDistance <= _navMeshAgent.stoppingDistance)
             {
                 PicNewPatrolPoint();
             }
@@ -54,9 +57,22 @@ public class EnemyIo : MonoBehaviour
 
         NoticePlayerUpdate();
         ChaseUpdate();
+        AttackUpdate();
         PatrolUpdate();
     
     }
+
+    private void AttackUpdate()
+    {
+        if (_isPlayerNoticed)
+        {
+            if (_navMeshAgent.remainingDistance <= _navMeshAgent.stoppingDistance)
+            {
+                _PlayerHealth.DealDamage(Damage * Time.deltaTime);
+            }
+        }
+    }
+
     private void NoticePlayerUpdate()
     {
         var direction = player.transform.position - transform.position;
