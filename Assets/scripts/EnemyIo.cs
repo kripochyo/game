@@ -13,6 +13,12 @@ public class EnemyIo : MonoBehaviour
     private NavMeshAgent _navMeshAgent;
     private bool _isPlayerNoticed;
     private PlayerHealth _PlayerHealth;
+    private EnemyHealth _enemyHealth;
+
+    public bool IsAlive()
+    {
+        return _enemyHealth.IsAlive();
+    }
 
     // Start is called before the first frame update
     private void Start()
@@ -31,6 +37,7 @@ public class EnemyIo : MonoBehaviour
     {
         _navMeshAgent = GetComponent<NavMeshAgent>();
         _PlayerHealth = player.GetComponent<PlayerHealth>();
+        _enemyHealth = GetComponent<EnemyHealth>();
     }
 
     private void PatrolUpdate()
